@@ -269,3 +269,166 @@ function flipAndInvertImage(image) {
 
     return image;
 }
+
+
+const assert = require('assert');
+
+// Given an array of integers nums and integer target, return indices of the two numbers such
+// that they add up to target
+
+// there is exactly one solution and you may not use the same element twice
+// you can return the answer in any order
+
+assert.deepEqual(twoSum([2, 7, 11, 15], 9), [0, 1]);
+assert.deepEqual(twoSum([3, 2, 4], 6), [1, 2]);
+assert.deepEqual(twoSum([3, 3], 6), [0, 1]);
+
+// Create an object with the num and the index as we loop through the arr
+// For each num in the arr, if the difference between the num and the target is already in the 
+// object, return the indices of the current num and num in the obj
+
+// Otherwise, add the current num to the object
+
+function twoSum(nums, target) {
+    let seen = {};
+
+    for (let i = 0; i < nums.length; i++) {
+        let neededNum = target - nums[i];
+
+        if (seen[neededNum] !== undefined) return [seen[neededNum], i];
+        else (seen[nums[i]] = i);
+    }
+
+}
+
+const assert = require('assert');
+
+// Valid Parentheses
+// Given a string (s) containing the characters (){}[], determine if the input string is valid
+// An input string is valid if:
+// 1. Open brackets must be closed by the same type of brackets
+// 2. Open brackets must be closed in the correct order
+
+assert.equal(isValid("()"), true);
+assert.equal(isValid("()[]{}"), true);
+assert.equal(isValid("(]"), false);
+
+// Create a mapping of matching brackets
+// Create a stack 
+// loop through the string
+// If the current character is not a matching pair to the last item in the stack, add it to the stack
+// If the current character is a matching pair to the last item in the stack, pop the last item off the
+// stack
+
+// return whether there is anything in the stack or not
+
+function isValid(s) {
+    const MAPPING = { "(": ")", "[": "]", "{": "}" };
+    let stack = [];
+
+    for (let char of s) {
+        if (MAPPING[char]) stack.push(char);
+        else if (MAPPING[stack[stack.length - 1]] === char) stack.pop();
+        else return false;
+    }
+    return stack.length === 0;
+}
+
+
+// Best Time to Buy and Sell Stock
+
+// Given an array prices where prices[i] is the price of a given stock on the ith day.
+// Maximize profits by choosing a single day to buy one stock and choosing a different day in the future
+// to sell that stock
+// return the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return 0
+
+const assert = require('assert');
+
+assert.equal(maxProfit([7, 1, 5, 3, 6, 4]), 5);
+assert.equal(maxProfit([7, 6, 4, 3, 1]), 0);
+assert.equal(maxProfit([2, 4, 1]), 2);
+assert.equal(maxProfit([3, 2, 6, 5, 0, 3]), 4);
+
+// find the indexof the min num in the array
+// Create a slice of the remaining array and find the max of those numbers
+// return the max of the difference or 0
+
+// loop through the array and create another array of all nums that have a num after it that is increasing
+// find the min of those numbers
+
+// function maxProfit(prices) {
+//   let min = Math.min(...prices);
+//   let minIdx = prices.indexOf(min);
+
+//   let max = Math.max(...prices.slice(minIdx));
+//   console.log({max, min});
+
+//   return Math.max(max-min, 0);
+// }
+
+// function maxProfit(prices) {
+//   let smallerNums = [];
+
+//   for (let i = 0; i < prices.length - 1; i++) {
+//     if (prices[i] < prices[i+1]) smallerNums.push(prices[i]);
+//   }
+
+//   if (smallerNums.length === 0) return 0;
+
+//   let min = Math.min(...smallerNums);
+//   let minIdx = prices.indexOf(min);
+
+//   let max = Math.max(...prices.slice(minIdx));
+
+//   return Math.max(max-min, 0);
+
+// }
+
+function maxProfit(prices) {
+    let min = +Infinity;
+    let max = 0;
+
+    for (let i = 0; i < prices.length; i++) {
+        min = Math.min(min, prices[i]);
+        max = Math.max(max, prices[i] - min);
+    }
+    return max;
+
+}
+
+// IS SUBSEQUENCE
+// Given two strings (s & t) return true if s is a subsequence of t or false otherwise;
+
+// s = "abc", t = "ahbgdc" => true
+// s = "axc", t = "ahbgdc" => false
+// s = "abc", t = "abc" => true
+
+
+// if s === t return true;
+// Find the longer string
+// Create a result string
+// loop through the string and if the letter is in the shorter word, add it to result string
+// at the end return if the two strings are the same
+
+const assert = require('assert');
+
+assert.equal(isSubsequence("abc", "ahbgdc"), true);
+assert.equal(isSubsequence("axc", "ahbgdc"), false);
+assert.equal(isSubsequence("abc", "abc"), true);
+assert.equal(isSubsequence("abc", ""), false);
+assert.equal(isSubsequence("ab", "baab"), true);
+
+function isSubsequence(s, t) {
+    if (s === t) return true;
+
+    let i = 0, j = 0;
+
+    while (j < t.length) {
+        if (s[i] === t[j]) {
+            i++;
+        }
+        j++;
+    }
+    return i === s.length;
+
+}

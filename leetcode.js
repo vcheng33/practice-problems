@@ -885,3 +885,204 @@ function longestCommonPrefix(strs) {
     }
     return result;
 }
+
+// capitalizeFirst
+// given an array of strings, capitalize the first letter of each string in the array
+
+
+const assert = require('assert');
+
+assert.deepEqual(capitalizeFirst(['car', 'taco', 'banana']), ['Car', 'Taco', 'Banana']);
+
+// function capitalizeFirst(strs){
+
+//   let result = [];
+
+//   if (strs.length === 0) return result;
+
+//   result.push(strs[0].toUpperCase + strs.slice(1));
+
+//   return result.concat(capitalizeFirst(strs.substring(1)));
+// }
+
+// function capitalizeFirst(strs){
+//   let result = [];
+//   if (strs.length === 0) return result;
+
+//   let currWord = strs[0];
+//   let capitalized = currWord[0].toUpperCase() + currWord.substring(1);
+//   result.push(capitalized);
+//   return result.concat(capitalizeFirst(strs.slice(1)));
+
+// }
+
+function capitalizeFirst(strs, result = []) {
+    console.log({ strs, result });
+    if (strs.length === 0) return result;
+
+    result.push(strs[0][0].toUpperCase() + strs[0].substring(1));
+    return capitalizeFirst(strs.slice(1), result);
+}
+
+
+const assert = require('assert');
+
+// nestedEvenSum
+// return the sum of all even numbers in an object which may contain nested objects
+
+var obj1 = {
+    outer: 2,
+    obj: {
+        inner: 2,
+        otherObj: {
+            superInner: 2,
+            notANumber: true,
+            alsoNotANumber: "yup"
+        }
+    }
+}
+
+var obj2 = {
+    a: 2,
+    b: { b: 2, bb: { b: 3, bb: { b: 2 } } },
+    c: { c: { c: 2 }, cc: 'ball', ccc: 5 },
+    d: 1,
+    e: { e: { e: 2 }, ee: 'car' }
+};
+
+assert.equal(nestedEvenSum(obj1), 6);
+assert.equal(nestedEvenSum(obj2), 10);
+
+
+function nestedEvenSum(obj) {
+    let sum = 0;
+    for (let item in obj) {
+        if (typeof obj[item] === 'object') {
+            sum += nestedEvenSum(obj[item]);
+        } else if (typeof obj[item] === 'number' && obj[item] % 2 === 0) {
+            sum += obj[item]
+        }
+    }
+    return sum;
+}
+
+const assert = require('assert');
+
+// capitalizeWords
+// given an array of words, return a new array containing each word capitalized
+
+
+let words = ['i', 'am', 'learning', 'recursion'];
+assert.deepEqual(capitalizeWords(words), ['I', 'AM', 'LEARNING', 'RECURSION']);
+
+function capitalizeWords(words, result = []) {
+    if (words.length === 0) return result;
+
+    result.push(words[0].toUpperCase());
+    return capitalizeWords(words.slice(1), result);
+}
+
+// stringify numbers
+// takes in an object and finds all of the values which are numbers and converts them to strings
+
+const assert = require('assert');
+
+let obj = {
+    num: 1,
+    test: [],
+    data: {
+        val: 4,
+        info: {
+            isRight: true,
+            random: 66
+        }
+    }
+}
+
+
+assert.deepEqual(stringifyNumbers(obj), {
+    num: "1",
+    test: [],
+    data: {
+        val: "4",
+        info: {
+            isRight: true,
+            random: "66"
+        }
+    }
+});
+
+function stringifyNumbers(obj) {
+    let newObj = {}
+    for (let item in obj) {
+        if (typeof obj[item] === 'number') {
+            newObj[item] = obj[item].toString();
+        } else if (typeof obj[item] === 'object' && !Array.isArray(obj[item])) {
+            newObj[item] = stringifyNumbers(obj[item]);
+        } else {
+            newObj[item] = obj[item];
+        }
+    }
+    return newObj;
+}
+
+const assert = require('assert');
+
+const obj = {
+    stuff: "foo",
+    data: {
+        val: {
+            thing: {
+                info: "bar",
+                moreInfo: {
+                    evenMoreInfo: {
+                        weMadeIt: "baz"
+                    }
+                }
+            }
+        }
+    }
+}
+
+assert.deepEqual(collectStrings(obj), ["foo", "bar", "baz"]);
+
+function collectStrings(obj) {
+    let strs = [];
+
+    for (let key in obj) {
+        if (typeof obj[key] === 'object') {
+            strs.push(...collectStrings(obj[key]));
+        } else if (typeof obj[key] === 'string') {
+            strs.push(obj[key]);
+        }
+    }
+    return strs;
+}
+
+// binarySearch
+// accepts a sorted array and a value and returns the index at which the value
+// exists
+// Otherwise return -1
+
+const assert = require('assert');
+
+assert.equal(binarySearch([1, 2, 3, 4, 5], 2), 1);
+assert.equal(binarySearch([1, 2, 3, 4, 5], 3), 2);
+
+function binarySearch(nums, target) {
+    let left = 0;
+    let right = nums.length - 1;
+
+    while (left <= right) {
+        let mid = Math.floor((left + right) / 2);
+
+        if (nums[mid] === target) return mid;
+
+        else if (nums[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return -1;
+}

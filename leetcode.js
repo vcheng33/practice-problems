@@ -1086,3 +1086,162 @@ function binarySearch(nums, target) {
     }
     return -1;
 }
+
+// anagrams
+// given two strings, determine if the second string is an anagram of the first
+
+const assert = require('assert');
+
+assert.equal(validAnagram('', ''), true);
+assert.equal(validAnagram('aaz', 'zza'), false);
+assert.equal(validAnagram('anagram', 'nagaram'), true);
+assert.equal(validAnagram('rat', 'car'), false);
+assert.equal(validAnagram('awesome', 'awesom'), false);
+assert.equal(validAnagram('qwerty', 'qeywrt'), true);
+assert.equal(validAnagram('texttwisttime', 'timetwisttext'), true);
+
+function validAnagram(str1, str2) {
+
+    if (str1.length !== str2.length) return false;
+
+    let counter1 = {};
+    let counter2 = {};
+
+    for (let letter of str1) {
+        counter1[letter] = (counter1[letter] || 0) + 1;
+    }
+
+    for (let char of str2) {
+        counter2[char] = (counter2[char] || 0) + 1;
+    }
+
+    for (let key in counter1) {
+        if (counter1[key] !== counter2[key]) return false;
+    }
+    return true;
+}
+
+// averagePair
+// given a SORTED array of integers and a target value
+// determine if there is a pair of values in the array where the average of the pair
+// equals the target average
+
+const assert = require('assert');
+
+assert.equal(averagePair([1, 2, 3], 2.5), true);
+assert.equal(averagePair([1, 3, 3, 5, 6, 7, 10, 12, 19], 8), true);
+assert.equal(averagePair([-1, 0, 3, 4, 5, 6], 4.1), false);
+assert.equal(averagePair([], 4), false);
+
+function averagePair(nums, target) {
+    let left = 0;
+    let right = nums.length - 1;
+
+    while (left <= right) {
+        let average = (nums[left] + nums[right]) / 2;
+
+        if (average === target) return true;
+        else if (average < target) left++;
+        else right--;
+    }
+    return false;
+}
+
+
+// isSubsequence
+// takes in two strings and checks whether the characters in the first string form
+// a subsequence of the characters in the second string
+
+const assert = require('assert');
+
+assert.equal(isSubsequence('hello', 'hello world'), true);
+assert.equal(isSubsequence('sing', 'sting'), true);
+assert.equal(isSubsequence('abc', 'abracadabra'), true);
+assert.equal(isSubsequence('abc', 'acb'), false);
+
+function isSubsequence(str1, str2) {
+    let pointer1 = 0;
+
+    for (let pointer2 = 0; pointer2 < str2.length; pointer2++) {
+        if (str1[pointer1] === str2[pointer2]) {
+            pointer1++
+        }
+    }
+
+    return str1.length === pointer1;
+
+}
+
+// maxSubarraySum
+
+// given an array of integers and a number
+// finds the maximum sum of a subarray with the length of the number passed to the function
+
+const assert = require('assert');
+
+assert.equal(maxSubarraySum([100, 200, 300, 400], 2), 700);
+assert.equal(maxSubarraySum([1, 4, 2, 10, 23, 3, 1, 0, 20], 4), 39);
+assert.equal(maxSubarraySum([-3, 4, 0, -2, 6, -1], 2), 5);
+assert.equal(maxSubarraySum([3, -2, 7, -4, 1, -1, 4, -2, 1], 2), 5);
+assert.equal(maxSubarraySum([2, 3], 3), null);
+
+function maxSubarraySum(nums, length) {
+    if (length > nums.length) return null;
+
+    let sum = 0;
+
+    for (let i = 0; i < length; i++) {
+        sum += nums[i]; // 1
+    }
+
+    let left = 0;
+    let right = left + length; // 2
+    let currSum = sum;
+
+    while (right < nums.length) {
+        currSum = currSum - nums[left] + nums[right]; // 1 +3 + 0 => 4 -4 -2 => -6
+        sum = Math.max(sum, currSum); // 4
+        left++; // 2
+        right++; // 3
+    }
+    return sum;
+}
+
+// minSubArrayLen accepts an array of positive ints and a positive int
+
+// function should return the minimal length of a contiguous subarray of which
+// the sum is greater than or equal to the integer passed into the function
+// if there isn't one return 0
+
+const assert = require('assert');
+
+assert.equal(minSubArrayLen([2, 3, 1, 2, 4, 3], 7), 2);
+assert.equal(minSubArrayLen([2, 1, 6, 5, 4], 9), 2);
+assert.equal(minSubArrayLen([2, 1, 6, 5, 4, 9], 9), 1);
+assert.equal(minSubArrayLen([3, 1, 7, 11, 2, 9, 8, 21, 62, 33, 19], 52), 1);
+assert.equal(minSubArrayLen([1, 4, 16, 22, 5, 7, 8, 9, 10], 39), 3);
+assert.equal(minSubArrayLen([1, 4, 16, 22, 5, 7, 8, 9, 10], 55), 5);
+assert.equal(minSubArrayLen([4, 3, 3, 8, 1, 2, 3], 11), 2);
+assert.equal(minSubArrayLen([1, 4, 16, 22, 5, 7, 8, 9, 10], 95), 0);
+
+function minSubArrayLen(nums, target) {
+    let start = 0;
+    let end = 0;
+    let minLen = +Infinity;
+    let sum = 0;
+
+    while (start < nums.length) {
+        console.log({ sum, start, end, minLen, target });
+        if (sum < target && end < nums.length) {
+            sum += nums[end];
+            end++;
+        } else if (sum >= target) {
+            minLen = Math.min(minLen, (end - start));
+            sum -= nums[start];
+            start++;
+        } else {
+            break
+        }
+    }
+    return minLen === Infinity ? 0 : minLen;
+}

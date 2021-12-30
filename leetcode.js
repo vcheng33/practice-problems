@@ -1245,3 +1245,401 @@ function minSubArrayLen(nums, target) {
     }
     return minLen === Infinity ? 0 : minLen;
 }
+
+// findLongestSubstring
+
+// accepts a string and returns the length of the longest substring with all distinct
+// characters
+
+const assert = require('assert');
+
+assert.equal(findLongestSubstring(""), 0);
+assert.equal(findLongestSubstring("rithmschool"), 7);
+assert.equal(findLongestSubstring("thisisawesome"), 6);
+assert.equal(findLongestSubstring("thecatinthehat"), 7);
+assert.equal(findLongestSubstring("bbbbbb"), 1);
+assert.equal(findLongestSubstring("longestsubstring"), 8);
+assert.equal(findLongestSubstring("thisishowwedoit"), 6);
+
+function findLongestSubstring(str) {
+    let unique = new Map();
+    let start = 0;
+    let end = 0;
+    let longest = 0;
+
+    while (end < str.length) {
+        if (!unique.has(str[end])) {
+            unique.set(str[end], end);
+            end++;
+            longest = Math.max(longest, unique.size);
+        } else {
+            start = unique.get(str[end]) + 1;
+            unique = new Map();
+            unique.set(str[start], start);
+            end = start + 1;
+        }
+    }
+    return longest;
+}
+
+// countZeros
+// given an array of 1,0 which has all 1's followed by all 0's
+// return the number of 0's in the array
+
+const assert = require('assert');
+
+assert.equal(countZeroes([1, 1, 1, 1, 0, 0]), 2);
+assert.equal(countZeroes([1, 0, 0, 0, 0]), 4);
+assert.equal(countZeroes([0, 0, 0]), 3);
+assert.equal(countZeroes([1, 1, 1, 1]), 0);
+
+function countZeroes(nums) {
+    let countOnes = 0;
+
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] === 1) countOnes += 1;
+    }
+    return nums.length - countOnes;
+}
+
+// countZeros
+// given an array of 1,0 which has all 1's followed by all 0's
+// return the number of 0's in the array
+
+const assert = require('assert');
+
+assert.equal(countZeroes([1, 1, 1, 1, 0, 0]), 2);
+assert.equal(countZeroes([1, 0, 0, 0, 0]), 4);
+assert.equal(countZeroes([0, 0, 0]), 3);
+assert.equal(countZeroes([1, 1, 1, 1]), 0);
+
+// function countZeroes(nums) {
+//   let countOnes = 0;
+
+//   for (let i = 0; i < nums.length; i++) {
+//     if (nums[i] === 1) countOnes += 1;
+//   }
+//   return nums.length - countOnes;
+// }
+
+function countZeroes(nums) {
+    let left = 0;
+    let right = nums.length - 1;
+    let lowestZero = +Infinity;
+
+    while (left <= right) {
+        let mid = Math.floor((left + right) / 2);
+        if (nums[mid] === 0) {
+            lowestZero = Math.min(mid, lowestZero);
+            right = mid - 1;
+        } else if (nums[mid] === 1) {
+            left = mid + 1;
+        }
+    }
+    return lowestZero === Infinity ? 0 : nums.length - lowestZero;
+}
+
+
+// sortedFrequency
+// given a sorted array and a number, return the occurrences of the number in the array;
+
+const assert = require('assert');
+
+assert.equal(sortedFrequency([1, 1, 2, 2, 2, 2, 3], 2), 4);
+assert.equal(sortedFrequency([1, 1, 2, 2, 2, 2, 3], 3), 1);
+assert.equal(sortedFrequency([1, 1, 2, 2, 2, 2, 3], 1), 2);
+assert.equal(sortedFrequency([1, 1, 2, 2, 2, 2, 3], 4), -1);
+
+function sortedFrequency(nums, target) {
+    let left = 0;
+    let right = nums.length - 1;
+    let minTarget = +Infinity
+    let maxTarget = -Infinity;
+
+    // give minIdx of target
+    while (left <= right) {
+        let mid = Math.floor((left + right) / 2);
+        if (nums[mid] === target) {
+            minTarget = Math.min(minTarget, mid);
+            right = mid - 1;
+        } else if (nums[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+
+    left = minTarget || 0;
+    right = nums.length;
+
+    while (left <= right) {
+        let mid = Math.floor((left + right) / 2);
+        if (nums[mid] === target) {
+            maxTarget = Math.max(maxTarget, mid);
+            left = mid + 1;
+        } else if (nums[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return (maxTarget === -Infinity && minTarget === +Infinity) ? -1 : maxTarget - minTarget + 1;
+}
+
+// constructNote
+// accepts 2 strings, a message and some letters
+// return true if the message can be built with the letters that you are given or it should return false
+
+// assume only lowercase letters and no space or special characters in both the message and the letters
+
+const assert = require('assert');
+
+assert.equal(constructNote('aa', 'abc'), false);
+assert.equal(constructNote('abc', 'dcba'), true);
+assert.equal(constructNote('aabbcc', 'bcabcaddff'), true);
+
+function constructNote(message, letters) {
+    let letterCount = {}
+
+    for (let l of letters) {
+        letterCount[l] = (letterCount[l] || 0) + 1;
+    }
+
+    for (let m of message) {
+        if (letterCount[m]) {
+            letterCount[m]--;
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
+
+// findAllDuplicates
+// array of positive integers
+// some elements appear twice and others appear once
+// find all the elements that appear twice in this array
+
+const assert = require('assert');
+
+assert.deepStrictEqual(findAllDuplicates([4, 3, 2, 7, 8, 2, 3, 1]), [2, 3]);
+assert.deepStrictEqual(findAllDuplicates([4, 3, 2, 1, 0]), []);
+assert.deepStrictEqual(findAllDuplicates([4, 3, 2, 1, 0, 1, 2, 3]), [1, 2, 3]);
+
+function findAllDuplicates(nums) {
+    let counter = {};
+    nums.forEach(num => counter[num] = (counter[num] || 0) + 1);
+
+    let duplicates = [];
+    for (let key in counter) {
+        if (counter[key] === 2) duplicates.push(+key);
+    }
+
+    return duplicates;
+}
+
+// findPair
+// given an UNSORTED array and a number , find if there exists a pair of elements in the array whose
+// difference is n
+// return true if the pair exists or false if it does not
+
+const assert = require('assert');
+
+assert.equal(findPair([6, 1, 4, 10, 2, 4], 2), true); // [1,2,4,4,6,10]
+assert.equal(findPair([8, 6, 2, 4, 1, 0, 2, 5, 13], 1), true);
+assert.equal(findPair([4, -2, 3, 10], -6), true); // [-2, 3, 4, 10]
+assert.equal(findPair([6, 1, 4, 10, 2, 4], 22), false);
+assert.equal(findPair([], 0), false);
+assert.equal(findPair([5, 5], 0), true);
+assert.equal(findPair([-4, 4], -8), true);
+assert.equal(findPair([-4, 4], 8), true);
+assert.equal(findPair([1, 3, 4, 6], -2), true);
+assert.equal(findPair([0, 1, 3, 4, 6], -2), true);
+
+function findPair(nums, target) {
+    nums = nums.sort((a, b) => a - b);
+    let left = 0;
+    let right = nums.length - 1;
+
+    while (left < right) {
+        if (nums[left] - nums[right] === target || nums[right] - nums[left] === target) {
+            return true;
+        } else if (nums[left] - nums[right]
+  }
+
+}
+
+function findPair(nums, target) {
+    let seen = new Set(nums);
+
+    for (let num of nums) {
+        let neededNum1 = target - num;
+        let neededNum2 = num - target;
+        if (seen.has(neededNum1) || seen.has(neededNum2)) return true;
+    }
+    return false;
+}
+
+// best time to buy and sell stock
+// maximize profit by choosing a single day to buy one stock
+// choosing a different to sell that stock
+// return the maximum profit you can achieve from this transaction
+// if no profit, return 0;
+
+const assert = require('assert');
+
+assert.equal(maxProfit([7, 1, 5, 3, 6, 4]), 5);
+assert.equal(maxProfit([7, 6, 4, 3, 1]), 0);
+
+function maxProfit(prices) {
+    let min = +Infinity;
+    let max = 0;
+
+    for (let i = 0; i < prices.length; i++) {
+        console.log({ min, max }, 'prices[i]', prices[i]);
+        min = Math.min(min, prices[i]);
+        max = Math.max(max, prices[i] - min);
+
+    }
+    return max;
+}
+
+const assert = require('assert');
+
+function ListNode(val, next) {
+    this.val = (val === undefined ? 0 : val)
+    this.next = (next === undefined ? null : next)
+}
+
+function mergeTwoLists(list1, list2) {
+    let fakeHead = new ListNode(-1);
+    let prev = fakeHead;
+
+    while (list1 && list2) {
+        if (list1.val <= list2.val) {
+            prev.next = list1;
+            list1 = list1.next;
+        } else {
+            prev.next = list2;
+            list2 = list2.next;
+        }
+        prev = prev.next;
+    }
+    prev.next = list1 || list2;
+    return fakeHead.next;
+}
+
+const assert = require('assert');
+
+assert.deepEqual(subdomainVisits(["900 google.mail.com", "50 yahoo.com", "1 intel.mail.com", "5 wiki.org"]), ["901 mail.com", "50 yahoo.com", "900 google.mail.com", "5 wiki.org", "5 org", "1 intel.mail.com", "951 com"]);
+
+assert.deepEqual(subdomainVisits(["9001 discuss.leetcode.com"]), ["9001 leetcode.com", "9001 discuss.leetcode.com", "9001 com"]);
+
+// function subdomainVisits(domains) {
+//   let counter = {};
+
+//   for (let domain of domains) {
+//     let [visits, subdomain] = domain.split(" ");
+//     visits = Number(visits);
+//     let [d1, d2, d3] = subdomain.split(".");
+//     if (d3) {
+//       counter[d3] = (counter[d3] || 0) + visits;
+//       counter[`${d2}.${d3}`] = (counter[`${d2}.${d3}`] || 0) + visits;
+//       counter[`${d1}.${d2}.${d3}`] = (counter[`${d1}.${d2}.${d3}`] || 0) + visits;    
+
+//     }
+//     if (!d3) {
+//       counter[d2] = (counter[d2] || 0) + visits;
+//       counter[`${d1}.${d2}`] = (counter[`${d1}.${d2}`] || 0) + visits;
+//     }
+//     console.log({counter});
+//   }
+
+//   let result = [];
+//   for (let key in counter) {
+//     let output = `${counter[key]} ${key}`;
+//     result.push(output);
+//   }
+//   return result;
+// }
+
+function subdomainVisits(domains) {
+    let counter = {};
+
+    for (let domain of domains) {
+        let [visits, subdomain] = domain.split(" ");
+        visits = Number(visits);
+        let subdomains = subdomain.split(".");
+
+        while (subdomains.length) {
+            let joined = subdomains.join(".");
+            counter[joined] = (counter[joined] || 0) + visits;
+            subdomains.shift();
+        }
+    }
+    let result = [];
+
+    for (let key in counter) {
+        result.push(`${counter[key]} ${key}`);
+    }
+    return result;
+}
+
+const assert = require('assert');
+
+assert.equal(numIslands([
+    ["1", "1", "1", "1", "0"],
+    ["1", "1", "0", "1", "0"],
+    ["1", "1", "0", "0", "0"],
+    ["0", "0", "0", "0", "0"]
+]), 1);
+
+assert.equal(numIslands([
+    ["1", "1", "0", "0", "0"],
+    ["1", "1", "0", "0", "0"],
+    ["0", "0", "1", "0", "0"],
+    ["0", "0", "0", "1", "1"]
+]), 3);
+
+function numIslands(island) {
+    let count = 0;
+
+    function findIsland(x, y) {
+        if (island[x][y] === '1') {
+            island[x][y] = '0';
+        } else {
+            return;
+        }
+
+        if (x < island.length - 1) {
+            findIsland(x + 1, y);
+        }
+
+        if (y < island[x].length - 1) {
+            findIsland(x, y + 1);
+        }
+
+        if (x > 0 && x < island.length) {
+            findIsland(x - 1, y);
+        }
+
+        if (y > 0 && y < island[x].length) {
+            findIsland(x, y - 1);
+        }
+    }
+
+    for (let i = 0; i < island.length; i++) {
+        for (let j = 0; j < island[i].length; j++) {
+            if (island[i][j] === '1') {
+                count++;
+                findIsland(i, j);
+            }
+        }
+    }
+    return count;
+}
+
+// check the current coordinates to see if it's a 1, if so
+// call the function again on the one below
+// call the function on the left
+// call the function on the right

@@ -1643,3 +1643,223 @@ function numIslands(island) {
 // call the function again on the one below
 // call the function on the left
 // call the function on the right
+
+const assert = require('assert');
+
+const ALPHABET = new Set('abcdefghijklmnopqrstuvwxyz');
+
+assert.equal(isPalindrome("A man, a plan, a canal: Panama"), true);
+assert.equal(isPalindrome("race a car"), false);
+assert.equal(isPalindrome(" "), true);
+
+
+
+// function isPalindrome(str) {
+//   let left = 0;
+//   let right = str.length - 1;
+
+//   while (left < right) {
+//     let leftValidIndex = str[left].toLowerCase().charCodeAt() - 97 >= 0 && str[left].toLowerCase().charCodeAt() - 97 <= 26;
+//     let rightValidIndex = str[right].toLowerCase().charCodeAt() - 97 >= 0 && str[right].toLowerCase().charCodeAt() - 97 <= 26
+//     console.log({left, right, leftValidIndex, rightValidIndex});
+//     if (!leftValidIndex) {
+//       left++;
+//     } else if (!rightValidIndex) {
+//       right--;
+//     } else if (str[left].toLowerCase() !== str[right].toLowerCase()) {
+//       return false;
+//     } else {
+//       left++;
+//       right--;
+//     }
+//   }
+//   return true;
+// }
+
+function isPalindrome(str) {
+    // const ALPHABET = new Set ('abcdefghijklmnopqrstuvwxyz');
+
+    let left = 0;
+    let right = str.length - 1;
+
+    while (left < right) {
+        if (!ALPHABET.has(str[left].toLowerCase())) {
+            left++;
+        } else if (!ALPHABET.has(str[right].toLowerCase())) {
+            right--
+        } else if (str[left].toLowerCase() !== str[right].toLowerCase()) {
+            return false;
+        } else {
+            left++;
+            right--;
+        }
+    }
+    return true;
+}
+
+const assert = require('assert');
+
+assert.equal(lengthOfLongestSubstring("abcabcbb"), 3);
+assert.equal(lengthOfLongestSubstring("bbbbbb"), 1);
+assert.equal(lengthOfLongestSubstring("pwwkew"), 3);
+
+function lengthOfLongestSubstring(str) {
+    let seen = {};
+    let start = 0;
+    let end = 0;
+    let longest = 0;
+
+    while (start < str.length && end < str.length) {
+
+        if (seen[str[end]]) {
+            longest = Math.max(longest, Object.keys(seen).length);
+            start = seen[str[end]];
+            end = start + 1;
+            seen = {};
+        } else {
+            seen[str[end]] = end;
+            end++;
+        }
+        console.log({ seen, start, end, longest });
+    }
+    return longest;
+}
+
+// mergeIntervals
+// intervals[i] = [start, end];
+// merge al overlapping intervals 
+// return an array of the non-overlapping intervals that cover all of the intervals
+// in the input
+
+const assert = require('assert');
+
+assert.deepEqual(merge([[1, 3], [2, 6], [8, 10], [15, 18]]), [[1, 6], [8, 10], [15, 18]]);
+assert.deepEqual(merge([[1, 4], [4, 5]]), [[1, 5]]);
+assert.deepEqual(merge([[1, 4], [2, 3]]), [[1, 4]]);
+
+function merge(intervals) {
+    if (intervals.length === 1) return intervals;
+
+    let merged = [];
+    intervals.sort((a, b) => a[0] - b[0]);
+
+    for (let [start, end] of intervals) {
+        if (merged.length === 0 || start > merged.at(-1)[1]) {
+            merged.push([start, end]);
+        } else {
+            merged[merged.length - 1] = [merged.at(-1)[0], Math.max(end, merged.at(-1)[1])];
+        }
+    }
+    return merged;
+}
+
+class TreeNode(val = 0, left = null, right = null) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+}
+
+function sortedArrayToBST(nums) {
+    if (nums.length === 0) return null;
+
+    let mid = Math.floor(nums.length / 2);
+    let newNode = new TreeNode(nums[mid]);
+    newNode.left = sortedArrayToBST(nums.slice(0, mid));
+    newNode.right = sortedArrayToBST(nums.slice(mid + 1));
+
+    return newNode;
+}
+
+const assert = require('assert');
+
+// assert.equal(climbStairs(3), 3);
+// assert.equal(climbStairs(2), 2);
+// assert.equal(climbStairs(5), 8);
+
+
+// // function climbStairs(n) {
+// //   let a = 1;
+// //   let b = 1;
+  
+// //   while (n--) {
+// //     // a = (b += a) - a;
+// //     b += a;
+// //     a = b - a;
+// //   }
+// //   return a;
+// // }
+
+// function climbStairs(n, memo = {}) {
+//   if (n === 1) return 1;
+//   if (n === 2) return 2;
+  
+//   if (memo[n]) return memo[n]
+//   let res = climbStairs(n - 1, memo) + climbStairs(n - 2, memo);
+//   memo[n] = res;
+//   return res;
+
+// }
+
+const assert = require('assert');
+
+assert.equal(subarraySum([1, 1, 1], 2), 2);
+assert.equal(subarraySum([1, 2, 3], 3), 2);
+
+function subarraySum(nums, target) {
+    let counter = { 0: 1 };
+    let sum = 0;
+    let res = 0;
+
+    for (let num of nums) {
+        console.log({ num, counter, sum, res });
+        sum += num;
+        let neededNum = sum - target;
+        res += counter[neededNum] || 0;
+
+        counter[sum] = (counter[sum] || 0) + 1;
+
+    }
+    return res;
+}
+
+// 3Sum
+
+const assert = require('assert');
+
+assert.deepEqual(threeSum([-1, 0, 1, 2, -1, -4]), [[-1, -1, 2], [-1, 0, 1]]);
+assert.deepEqual(threeSum([]), []);
+assert.deepEqual(threeSum([0]), []);
+
+function threeSum(nums) {
+    let result = [];
+
+    if (nums.length < 3) return result;
+    nums.sort((a, b) => a - b);
+
+    let target = 0;
+
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] > target) break;
+
+        if (i > 0 && nums[i - 1] === nums[i]) continue;
+        let j = i + 1
+        let k = nums.length - 1;
+
+        while (j < k) {
+            let sum = nums[i] + nums[j] + nums[k];
+            if (sum === target) {
+                result.push([nums[i], nums[j], nums[k]]);
+                while (nums[j] === nums[j + 1]) j++;
+                while (nums[k] === nums[k - 1]) k--;
+
+                j++;
+                k++;
+            } else if (sum < target) {
+                j++;
+            } else {
+                k--
+            }
+        }
+    }
+    return result;
+}

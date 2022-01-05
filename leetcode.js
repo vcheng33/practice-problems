@@ -1863,3 +1863,63 @@ function threeSum(nums) {
     }
     return result;
 }
+
+// countGoodTriplets
+
+const assert = require('assert');
+
+assert.equal(countGoodTriplets([3, 0, 1, 1, 9, 7], 7, 2, 3), 4);
+assert.equal(countGoodTriplets([1, 1, 2, 2, 3], 0, 0, 1), 0);
+assert.equal(countGoodTriplets([4, 9, 9, 8, 9, 5, 3, 7], 1, 3, 0), 3);
+
+// function countGoodTriplets(arr, a, b, c) {
+//   if (arr.length < 3) return 0;
+
+//   let count = 0;
+
+
+//   for (let i = 0; i < arr.length - 2; i++) {
+//     for (let j = i + 1; j < arr.length - 1; j++) {
+//       for (let k = j + 1; k < arr.length; k++) {
+//         console.log(arr[i], arr[j], arr[k], {count});
+//         if (Math.abs(arr[i] - arr[j]) <= a &&
+//             Math.abs(arr[j] - arr[k]) <= b &&
+//             Math.abs(arr[i] - arr[k]) <= c) {
+//           count++;
+//         }
+//       }
+//     }
+//   }
+//   return count;
+// }
+
+function countGoodTriplets(arr, a, b, c) {
+    let count = 0;
+
+    for (let i = 0; i < arr.length - 2; i++) {
+        for (let j = i + 1; j < arr.length - 1; j++) {
+            if (Math.abs(arr[i] - arr[j]) > a) continue;
+
+            for (let k = j + 1; k < arr.length; k++) {
+                console.log(arr[i], arr[j], arr[k], { count });
+                if (Math.abs(arr[j] - arr[k]) > b) continue;
+                if (Math.abs(arr[i] - arr[k]) <= c) count++;
+            }
+        }
+    }
+    return count;
+}
+
+const assert = require('assert');
+
+assert.deepEqual(buildArray([0, 2, 1, 5, 3, 4]), [0, 1, 2, 4, 5, 3]);
+assert.deepEqual(buildArray([5, 0, 1, 2, 3, 4]), [4, 5, 0, 1, 2, 3]);
+
+function buildArray(nums) {
+    let ans = [];
+
+    for (let i = 0; i < nums.length; i++) {
+        ans.push(nums[nums[i]]);
+    }
+    return ans;
+}

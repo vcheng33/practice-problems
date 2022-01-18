@@ -385,3 +385,109 @@ function solution(str) {
   }
   return maxLength;
 }
+
+class TreeNode {
+  constructor(val, children = []) {
+    this.val = val;
+    this.children = children;
+  }
+}
+
+function maxDepth(node) {
+  if (!node) return 0;
+
+  let toVisitStack = [[node, 0]];
+  let max = 0;
+
+  while (toVisitStack.length > 0) {
+    let [curr, depth] = toVisitStack.pop();
+    max = Math.max(max, depth);
+
+    for (let child of curr.children) {
+      toVisitStack.push([child, depth + 1]);
+    }
+  }
+
+  return max;
+}
+
+function threeSumClosest(nums, target) {
+  let minSum = +Infinity;
+
+  nums.sort((a, b) => a - b);
+
+  for (let i = 0; i < nums.length - 2; i++) {
+    let j = i + 1;
+    let k = nums.length - 1;
+
+    while (j < k) {
+      let sum = nums[i] + nums[j] + nums[k];
+
+      if (sum === target) return sum;
+      else if (sum < target) j++;
+      else k--;
+
+      let currMinDist = Math.abs(target - minSum);
+      let currDist = Math.abs(target - sum);
+      minSum = currMinDist <= currDist ? minSum : sum;
+    }
+  }
+  return minSum;
+}
+
+function threeSmallerSum (nums, target) {
+  if (nums.length < 3) return 0;
+
+  let countOfTriplets = 0;
+
+  nums.sort((a, b) => a - b);
+
+  for (let i = 0; i < nums.length - 2; i++) {
+
+    let j = i + 1;
+    let k = nums.length - 1;
+
+    while (j < k) {
+      let sum = nums[i] + nums[j] + nums[k];
+      if (sum < target) {
+        // MUST DO THE LINE BELOW to capture all of the iterations to the left
+        countOfTriplets += k - j;
+        j++;
+      } else {
+        k--;
+      }
+    }
+  }
+  return countOfTriplets;
+};
+
+const NUM_TO_LETTERS = {
+  2: ['a', 'b', 'c'],
+  3: ['d', 'e', 'f'],
+  4: ['g', 'h', 'i'],
+  5: ['j', 'k', 'l'],
+  6: ['m', 'n', 'o'],
+  7: ['p', 'q', 'r', 's'],
+  8: ['t', 'u', 'v'],
+  9: ['w', 'x', 'y', 'z']
+}
+
+function allIterations(str) {
+  let uniqueCombos = new Set(NUM_TO_LETTERS[str[0]]); // {a, b, c}
+
+  for (let i = 1; i < str.length; i++) {
+    let newLetters = NUM_TO_LETTERS[str[i]]; // [g, h, i]
+    let currCombos = []; // [ adg, adh, adi, aeg, aeh, aei, ae, bd, be, bf, cd, ce, cf]
+    for (let substr of uniqueCombos) {
+      for (let letter of newLetters) {
+        currCombos.push(substr + letter);
+      }
+      // uniqueCombos.delete(substr);
+    }
+    uniqueCombos = new Set(currCombos); // {ad, ae, af, bd, be, bf, cd, ce, cf}
+  }
+
+  return Array.from(uniqueCombos);
+}
+
+console.log(allIterations('234'));

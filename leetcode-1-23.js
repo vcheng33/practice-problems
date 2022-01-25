@@ -572,3 +572,27 @@ rl.on('line', (line) => {
 }).on('close', () => {
     console.log(raceWinner(pace, roads));
 });
+
+// longest substring without repeating characters
+
+const assert = require('assert');
+
+assert.equal(longestSubstring("abcabcbb"), 3);
+assert.equal(longestSubstring("bbbbb"), 1);
+assert.equal(longestSubstring("pwwkew"), 3);
+
+function longestSubstring(str) {
+    let seenLetters = new Map();
+    let maxSubstring = 0;
+
+    for (let i = 0; i < str.length; i++) {
+        if (seenLetters.has(str[i])) {
+            maxSubstring = Math.max(maxSubstring, seenLetters.size);
+            i = seenLetters.get(str[i]);
+            seenLetters = new Map();
+        } else {
+            seenLetters.set(str[i], i);
+        }
+    }
+    return Math.max(maxSubstring, seenLetters.size);
+}

@@ -596,3 +596,172 @@ function longestSubstring(str) {
     }
     return Math.max(maxSubstring, seenLetters.size);
 }
+
+// group anagrams
+
+const assert = require('assert');
+assert.deepStrictEqual(groupAnagrams(["eat", "tea", "tan", "ate", "nat", "bat"].sort()), [["bat"], ["nat", "tan"], ["ate", "eat", "tea"]].sort());
+
+assert.deepStrictEqual(groupAnagrams([""]), [[""]]);
+assert.deepStrictEqual(groupAnagrams(["a"]), [["a"]]);
+
+function groupAnagrams(strs) {
+    let indices = new Map();
+
+    for (let i = 0; i < strs.length; i++) {
+        let sortedWord = strs[i].split("").sort().join("");
+
+        if (!indices.has(sortedWord)) {
+            indices.set(sortedWord, [i]);
+        } else {
+            let currIndices = indices.get(sortedWord);
+            currIndices.push(i);
+            indices.set(sortedWord, currIndices);
+        }
+    }
+
+    let result = [];
+
+    for (let [key, value] of indices) {
+        let words = [];
+        for (let index of value) {
+            words.push(strs[index]);
+        }
+        result.push(words);
+    }
+
+    // console.log({result});
+    return result;
+}
+
+// valid parentheses
+// determine if the input string is valid
+
+// open brackets must be closed by the same type of brackets
+// open brackets must be closed in the correct order
+
+const assert = require('assert');
+
+assert.equal(isValid('()'), true);
+assert.equal(isValid('()[]{}'), true);
+assert.equal(isValid('(]'), false);
+
+function isValid(parentheses) {
+    const brackets = { '(': ')', '{': '}', '[': ']' };
+
+    let stack = [];
+
+    for (let char of parentheses) {
+        if (brackets[char]) {
+            stack.push(char);
+        } else {
+            if (brackets[stack[stack.length - 1]] === char) {
+                stack.pop();
+            } else {
+                return false;
+            }
+        }
+    }
+    return stack.length === 0;
+}
+
+// valid palindrome
+
+// after converting all uppercase letters to lowercase and removing all no-alphanumeric characters, it reads the same backward and forward
+
+const assert = require('assert');
+
+// assert.equal(isPalindrome("A man, a plan, a canal: Panama"), true);
+// assert.equal(isPalindrome("race a car"), false);
+// assert.equal(isPalindrome(" "), true);
+assert.equal(isPalindrome("0P"), false);
+
+// console.log(isLetter('a'))
+
+// make everything into a lower case string
+// create a left point and a right pointer
+
+// create a function to determine if the letter is between a and z (ie. it's not a symbol)
+
+// loop through the string starting from left and right and working your way to the middle
+// if left is not a letter, then increment left
+// if right is not a letter, decrement right
+
+// if there are two characters and they are equal, then increment left and decrement right
+// if they are not the same return false
+
+// when done through the loop, return true
+
+function isPalindrome(str) {
+    str = str.toLowerCase();
+
+    let left = 0;
+    let right = str.length - 1
+
+    while (left < right) {
+        let leftIsLetter = isLetter(str[left]);
+        let rightIsLetter = isLetter(str[right]);
+        console.log('left', str[left], 'right', str[right]);
+
+        if (!leftIsLetter) left++;
+        else if (!rightIsLetter) right--;
+        else if (leftIsLetter && rightIsLetter) {
+            if (str[left] === str[right]) {
+                right--;
+                left++;
+            } else {
+                return false;
+            }
+        }
+    }
+    console.log({ left, right })
+    return true;
+}
+
+function isLetter(char) {
+    let charCode = char.charCodeAt();
+    let lowerBound = 'a'.charCodeAt();
+    let upperBound = 'z'.charCodeAt();
+    let numLowerBound = '0'.charCodeAt();
+    let numUpperBound = '9'.charCodeAt();
+
+    return ((charCode <= upperBound && charCode >= lowerBound)
+        || (charCode <= numUpperBound && charCode >= numLowerBound));
+}
+
+// longest palindromic substring
+
+const assert = require('assert');
+
+// assert.equal(longestPalindrome('babad'), 'bab');
+// assert.equal(longestPalindrome('cbbd'), 'bb');
+assert.equal(longestPalindrome('bb'), 'bb');
+
+// create a isPalindrome function
+
+// loop through the string and create a nested loop starting at 1
+// run the substring through the isPalindrome function
+
+// if it is a palindrome, get the max length and store the word
+
+function isPalindrome(str) {
+    for (let i = 0; i < str.length / 2; i++) {
+        if (str[i] !== str[str.length - 1 - i]) return false;
+    }
+    return true;
+}
+
+function longestPalindrome(str) {
+    let longest = '';
+
+    for (let i = 0; i < str.length; i++) {
+        for (let j = i + 1; j <= str.length; j++) {
+            let substr = str.substring(i, j);
+            console.log({ substr })
+            if (isPalindrome(substr)) {
+                longest = longest.length >= substr.length ? longest : substr;
+            }
+        }
+    }
+    return longest;
+}

@@ -765,3 +765,45 @@ function longestPalindrome(str) {
     }
     return longest;
 }
+
+const assert = require('assert');
+
+assert.equal(maxProfit([7, 1, 5, 3, 6, 4]), 5);
+assert.equal(maxProfit([7, 6, 4, 3, 1]), 0);
+
+function maxProfit(prices) {
+    let maxProfit = -Infinity;
+    let minPrice = prices[0];
+
+    for (let i = 0; i < prices.length; i++) {
+        minPrice = Math.min(minPrice, prices[i]);
+        maxProfit = Math.max(maxProfit, prices[i] - minPrice);
+    }
+
+    return maxProfit;
+}
+
+const assert = require('assert');
+
+assert.equal(maxSubarray([-2, 1, -3, 4, -1, 2, 1, -5, 4]), 6);
+assert.equal(maxSubarray([1]), 1);
+assert.equal(maxSubarray([5, 4, -1, 7, 8]), 23);
+
+function maxSubarray(nums) {
+    let max = nums[0];
+    let currSum = 0;
+
+    for (let i = 0; i < nums.length; i++) {
+        if (currSum < 0) {
+            currSum = 0;
+        }
+
+        currSum += nums[i];
+        max = Math.max(currSum, max);
+    }
+
+    return max;
+}
+
+
+

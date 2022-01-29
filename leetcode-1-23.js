@@ -805,5 +805,43 @@ function maxSubarray(nums) {
     return max;
 }
 
+const assert = require('assert');
 
+assert.deepStrictEqual(twoSum([2, 7, 11, 15], 9), [1, 2]);
+assert.deepStrictEqual(twoSum([2, 3, 4], 6), [1, 3]);
+assert.deepStrictEqual(twoSum([-1, 0], -1), [1, 2]);
+
+function twoSum(nums, target) {
+    let left = 0;
+    let right = nums.length - 1;
+
+    while (left < right) {
+        let sum = nums[left] + nums[right];
+        if (sum === target) return [left + 1, right + 1];
+        if (sum < target) left++;
+        else right--;
+    }
+
+}
+
+const assert = require('assert');
+
+assert.equal(maxProductSubarray([2, 3, -2, 4]), 6);
+assert.equal(maxProductSubarray([-2, 0, -1]), 0);
+
+function maxProductSubarray(nums) {
+    let maxProduct = nums[0];
+    let prevMin = nums[0];
+    let prevMax = nums[0];
+
+    for (let i = 1; i < nums.length; i++) {
+        let currMin = Math.min(nums[i], prevMin * nums[i], prevMax * nums[i]);
+        let currMax = Math.max(nums[i], prevMin * nums[i], prevMax * nums[i]);
+        maxProduct = Math.max(maxProduct, currMax);
+        prevMin = currMin;
+        prevMax = currMax;
+    }
+
+    return maxProduct;
+}
 

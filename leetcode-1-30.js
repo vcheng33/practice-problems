@@ -262,6 +262,98 @@ function sumAccounts(person) {
     return wealth;
 }
 
+// check if N and its double exist
+var checkIfExist = function (arr) {
+    let indices = {};
+
+    for (let i = 0; i < arr.length; i++) {
+        let half = arr[i] / 2;
+        let double = arr[i] * 2;
+        console.log({ half, double, indices })
+        if (indices[half] !== undefined || indices[double] !== undefined) return true;
+        indices[arr[i]] = i;
+    }
+    return false;
+};
+
+// validMountain
+var validMountainArray = function (arr) {
+    if (arr.length < 3) return false;
+
+    let i = 1;
+    for (i = 1; i < arr.length; i++) {
+        if (arr[i] === arr[i - 1]) return false;
+        if (arr[i] < arr[i - 1]) break;
+    }
+    if (i === arr.length || i === 1) return false;
+
+    while (i < arr.length) {
+        if (arr[i] === arr[i + 1]) return false;
+        if (arr[i] < arr[i + 1]) return false;
+        i++;
+    }
+
+    return true;
+};
+
+// sort even on left and odd on right
+// An inPlace solution that uses O(n) runtime and O(1) additional space complexity
+var sortArrayByParity = function (nums) {
+    let leftLookingForOdd = 0;
+    let rightLookingForEven = nums.length - 1;
+
+    while (leftLookingForOdd < rightLookingForEven) {
+        while (nums[leftLookingForOdd] % 2 === 0 && leftLookingForOdd < rightLookingForEven) leftLookingForOdd++;
+        while (nums[rightLookingForEven] % 2 !== 0 && leftLookingForOdd < rightLookingForEven) rightLookingForEven--;
+
+        [nums[leftLookingForOdd], nums[rightLookingForEven]] = [nums[rightLookingForEven], nums[leftLookingForOdd]];
+        leftLookingForOdd++;
+        rightLookingForEven--;
+    }
+    return nums;
+};
+
+// Pacific Atlantic Water Flows
+function pacificAtlantic(heights) {
+    let ROWS = heights.length;
+    let COLS = heights[0].length;
+
+    // Sets of coordinates that keeps track of whether that cell is accessible from the pacific or atlantic ocean
+    let pacific = new Set();
+    let atlantic = new Set();
+
+    function dfs(r, c, visitedSet, prevHeight = heights[r][c]) {
+        // check if the cell is within bounds or already visited and return
+        let currCoord = [r, c].toString();
+        if (visitedSet.has(currCoord) || r < 0 || c < 0 || r === ROWS || c === COLS || heights[r][c] < prevHeight) return;
+        else visitedSet.add(currCoord);
+
+        dfs(r + 1, c, visitedSet, heights[r][c]);
+        dfs(r, c + 1, visitedSet, heights[r][c]);
+        dfs(r - 1, c, visitedSet, heights[r][c]);
+        dfs(r, c - 1, visitedSet, heights[r][c]);
+    }
+
+    for (let c = 0; c < COLS; c++) {
+        dfs(0, c, pacific, heights[0][c]);
+        dfs(ROWS - 1, c, atlantic, heights[ROWS - 1][c]);
+    }
+
+    for (let r = 0; r < ROWS; r++) {
+        dfs(r, 0, pacific, heights[r][0]);
+        dfs(r, COLS - 1, atlantic, heights[r][COLS - 1]);
+    }
+    console.log({ pacific, atlantic });
+
+    let bothPacificAndAtlantic = [];
+    for (let coord of pacific) {
+        if (atlantic.has(coord)) {
+            bothPacificAndAtlantic.push(coord.split(","));
+        }
+    }
+
+    return bothPacificAndAtlantic;
+}
 
 
 

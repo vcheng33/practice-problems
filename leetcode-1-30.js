@@ -355,7 +355,75 @@ function pacificAtlantic(heights) {
     return bothPacificAndAtlantic;
 }
 
+// subtree of another tree
+function isSubtree(root, subroot) {
+    let toVisitQueue = [root];
 
+    while (toVisitQueue.length) {
+        let node = toVisitQueue.shift();
+
+        if (node.val === subroot.val && isSame(node, subroot)) {
+            return true;
+        } else {
+            if (node.left) toVisitQueue.push(node.left);
+            if (node.right) toVisitQueue.push(node.right);
+        }
+    }
+    return false;
+};
+
+
+function isSame(node1, node2) {
+    let toVisit1 = [node1];
+    let toVisit2 = [node2];
+
+    while (toVisit1.length && toVisit2.length) {
+        let curr1 = toVisit1.shift();
+        let curr2 = toVisit2.shift();
+        if (!curr1 && !curr2) continue;
+        if (!curr1 || !curr2) return !curr1 && !curr2;
+        if (curr1.val !== curr2.val) return false;
+        toVisit1.push(curr1.left, curr1.right);
+        toVisit2.push(curr2.left, curr2.right);
+    }
+    return toVisit1.length === toVisit2.length;
+}
+
+// Invert Binary Tree
+function invertTree(root) {
+    if (!root) return root;
+    let toVisitStack = [root];
+
+    while (toVisitStack.length) {
+        let curr = toVisitStack.pop();
+        [curr.left, curr.right] = [curr.right, curr.left];
+
+        if (curr.left) toVisitStack.push(curr.left);
+        if (curr.right) toVisitStack.push(curr.right);
+    }
+
+    return root;
+}
+
+// Construct Binary Tree from Preorder and Inorder Traversal
+var buildTree = function (preorder, inorder) {
+    if (preorder.length === 0 || inorder.length === 0) return null;
+
+    // We know that in PreOrder traversal, the first node in the array is ALWAYS the root node
+    let root = new TreeNode(preorder[0]);
+
+    // We need to find the idx of the root in the inorder array so that we know which values are on
+    // the left and right sides
+    let midIdx = inorder.indexOf(preorder[0]);
+
+    // We call buildTree with the left subtree array 
+    // (preorder: everything after the root and before the midIdx)
+    // (inorder: everything before the midIdx)
+    root.left = buildTree(preorder.slice(1, midIdx + 1), inorder.slice(0, midIdx));
+    // We call buildTree with the right subtree array (everything to the right of the midIdx)
+    root.right = buildTree(preorder.slice(midIdx + 1), inorder.slice(midIdx + 1));
+    return root;
+};
 
 
 

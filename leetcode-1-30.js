@@ -425,10 +425,85 @@ var buildTree = function (preorder, inorder) {
     return root;
 };
 
+// Binary Tree Level Order Traversal
+// BFS && you need to keep track of how many nodes are in each level
 
+var levelOrder = function (root) {
+    if (!root) return [];
 
+    let toVisitQueue = [root];
+    let output = [];
 
+    while (toVisitQueue.length) {
+        let currOutput = [];
+        let levelLength = toVisitQueue.length;
+        while (levelLength > 0) {
+            let curr = toVisitQueue.shift();
+            currOutput.push(curr.val);
+            if (curr.left) toVisitQueue.push(curr.left);
+            if (curr.right) toVisitQueue.push(curr.right);
+            levelLength--;
+        }
+        output.push(currOutput);
+    }
+    return output;
+};
 
+// Validate Binary Search Tree
+// DFS + Recursion
+// Reminder, we need to check for examples of [5,1,4,null,null,3,6] where 3 is on the right side of the
+// root node but is less than the root node val.
+
+function isValidBST(root, lowerBound = -Infinity, upperBound = +Infinity) {
+    if (!root) return true;
+    if (root.val <= lowerBound || root.val >= upperBound) return false;
+
+    return (isValidBST(root.left, lowerBound, root.val) && isValidBST(root.right, root.val, upperBound));
+}
+
+// Set Matrix Zeroes
+function setZeroes(matrix) {
+    let ROWS = matrix.length;
+    let COLS = matrix[0].length;
+    let rowZeroes = false;
+
+    // find all the 0's
+    for (let i = 0; i < ROWS; i++) {
+        for (let j = 0; j < COLS; j++) {
+            if (matrix[i][j] === 0) {
+                matrix[0][j] = 0;
+
+                if (i > 0) matrix[i][0] = 0;
+                else rowZeroes = true;
+            }
+        }
+    }
+
+    // update the inner rows and columns
+    for (let k = 1; k < ROWS; k++) {
+        for (let l = 1; l < COLS; l++) {
+            if (matrix[0][l] === 0 || matrix[k][0] === 0) {
+                matrix[k][l] = 0;
+            }
+        }
+    }
+
+    // update the first column
+    if (matrix[0][0] === 0) {
+        for (let i = 0; i < ROWS; i++) {
+            matrix[i][0] = 0;
+        }
+    }
+
+    // update the first row
+    if (rowZeroes) {
+        for (let i = 0; i < COLS; i++) {
+            matrix[0][i] = 0;
+        }
+    }
+
+    return matrix;
+}
 
 
 

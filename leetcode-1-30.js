@@ -505,6 +505,64 @@ function setZeroes(matrix) {
     return matrix;
 }
 
+// Spiral Matrix
+// We create four boundaries: left, right, top and bottom
+// Starting in the top left corner we copy the matrix values as we move from left to right
+// We then go down, left and back up. We update the boundaries every time we finish a row/column
+
+function spiralOrder(matrix) {
+    let left = 0;
+    let right = matrix[0].length;
+    let top = 0;
+    let bottom = matrix.length;
+    let spiral = [];
+
+    while (left < right && top < bottom) {
+        // going from left to right
+        for (let i = left; i < right; i++) {
+            spiral.push(matrix[top][i]);
+        }
+        top++;
+
+        // going from top to bottom
+        for (let j = top; j < bottom; j++) {
+            spiral.push(matrix[j][right - 1]);
+        }
+        right--;
+
+        // We need this break to stop duplicating some cells where left === right for example
+        if (left >= right || top >= bottom) break;
+
+        // going from right to left
+        for (let k = right - 1; k >= left; k--) {
+            spiral.push(matrix[bottom - 1][k]);
+        }
+        bottom--;
+
+        // going from bottom to top
+        for (let l = bottom - 1; l >= top; l--) {
+            spiral.push(matrix[l][left]);
+        }
+        left++;
+
+    }
+    return spiral;
+}
+
+function findKClosestPoints(points, k) {
+    // if (points.length === k) return points;
+
+    let distances = [];
+
+    for (let [x, y] of points) { //[-2, 2]
+        let currDistance = Math.sqrt((x ** 2) + (y ** 2)); // 2
+        let coord = [x, y].toString(); // '[1,3]'
+        distances.push([currDistance, [x, y]]);// [{ [1,3] : 3 }, { [-2, 2] : 2}]
+    }
+    distances.sort((a, b) => a[0] - b[0]); // [{ [-2, 2] : 2}, { [1,3] : 3 }]
+
+    return distances.slice(0, k).map(e => e[1]); // [-2,2]
+}
 
 
 

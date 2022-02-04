@@ -564,6 +564,158 @@ function findKClosestPoints(points, k) {
     return distances.slice(0, k).map(e => e[1]); // [-2,2]
 }
 
+// CHeck if Every Row and Column Contains All Numbers
+var checkValid = function (matrix) {
+    let length = matrix.length;
+
+    //     function checkRow(r) {
+    //         let nums = new Set ();
+
+    //         for (let i = 0; i < length; i++) {
+    //             if (nums.has(matrix[r][i])) return false;
+    //             nums.add(matrix[r][i]);
+    //         }
+    //         return true;
+    //     }
+
+    function checkRow(r) {
+        let nums = new Set(matrix[r]);
+        return nums.size === length;
+    }
+
+    function checkCol(c) {
+        let nums = new Set();
+
+        for (let i = 0; i < length; i++) {
+            if (nums.has(matrix[i][c])) return false;
+            nums.add(matrix[i][c]);
+        }
+        return true;
+    }
+
+    for (let i = 0; i < length; i++) {
+        if (!checkRow(i) || !checkCol(i)) return false;
+    }
+
+    return true;
+};
+
+// Matrix Diagonal Sum
+var diagonalSum = function (mat) {
+    let visited = new Set();
+    let sum = 0;
+
+    for (let i = 0; i < mat.length; i++) {
+        let coord = [i, i].toString();
+        if (!visited.has(coord)) {
+            visited.add(coord);
+            sum += mat[i][i];
+        }
+    }
+
+    let row = mat.length - 1;
+    let col = 0;
+    while (col < mat.length) {
+        let coord = [row, col].toString();
+        if (!visited.has(coord)) {
+            visited.add(coord);
+            sum += mat[row][col];
+        }
+        row--;
+        col++;
+    }
+
+    return sum;
+};
+
+// isValidSudoku
+var isValidSudoku = function (board) {
+    for (let i = 0; i < board.length; i++) {
+        if (!checkRow(i)) return false;
+    }
+
+    for (let i = 0; i < board.length; i++) {
+        if (!checkCol(i)) return false;
+    }
+
+    let squares = {};
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board.length; j++) {
+            if (board[i][j] === '.') continue;
+            let bigR = Math.floor(i / 3);
+            let bigC = Math.floor(j / 3);
+            let square = [bigR, bigC].toString();
+            if (squares[square] === undefined) {
+                squares[square] = new Set(board[i][j]);
+            } else {
+                if (squares[square].has(board[i][j])) return false;
+                else (squares[square].add(board[i][j]));
+            }
+        }
+    }
 
 
+    function checkRow(r) {
+        let nums = new Set();
+        for (let i = 0; i < board.length; i++) {
+            let currNum = board[r][i];
+            if (currNum === '.') continue;
+            if (!nums.has(currNum)) nums.add(currNum);
+            else return false;
+        }
+        return true;
+    }
 
+    function checkCol(c) {
+        let nums = new Set();
+        for (let i = 0; i < board.length; i++) {
+            let currNum = board[i][c];
+            if (currNum === '.') continue;
+            if (!nums.has(currNum)) nums.add(currNum);
+            else return false;
+        }
+        return true;
+    }
+
+    return true;
+};
+
+
+// Word Search
+// Backtracking & Recursion
+function exist(board, word) {
+
+    function findWord(x, y, letterSeekingIdx = 0) {
+        // if this is not the letter that we're looking for, return false
+        if (board[x][y] !== word[letterSeekingIdx]) return false;
+        // if this letter matches the last letter in the word and we are at the end of our 
+        // search then we can return true
+        if (letterSeekingIdx === word.length - 1) return true;
+
+        // We update the cell to something distinctly different so that we know that we have
+        // already visited this cell
+        board[x][y] = 1;
+
+        // If x/y are within the constraints and if we call findWord with the updated constraints
+        // if we find a solution by going down this path, we should return true, otherwise,
+        // we keep searching through the other possibilities
+        if (x < board.length - 1 && findWord(x + 1, y, letterSeekingIdx + 1)) return true;
+        if (y < board[x].length - 1 && findWord(x, y + 1, letterSeekingIdx + 1)) return true;
+        if (x > 0 && findWord(x - 1, y, letterSeekingIdx + 1)) return true;
+        if (y > 0 && findWord(x, y - 1, letterSeekingIdx + 1)) return true;
+
+        // If we have gone through all of the four steps above and have not returned true already
+        // then we have not found the end of our word and we need to backtrack by resetting
+        // board[x][y] so it can be revisited again later if needed. We also return false because
+        // it was a dead end
+        board[x][y] = word[letterSeekingIdx];
+        return false;
+    }
+
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board[i].length; j++) {
+            if (board[i][j] === word[0] && findWord(i, j, 0)) return true;
+        }
+    }
+    return false;
+}

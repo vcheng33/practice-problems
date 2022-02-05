@@ -719,3 +719,67 @@ function exist(board, word) {
     }
     return false;
 }
+
+// Count Number of Pairs with Absolute Difference K
+// Similar to TwoSum, we loop through the keys in the counter object to find
+// the neededNum (in this case, it is key + k). 
+// Instead of incrementing, we multiply the counts for the NeededNum and the Key
+// This might be better implemented as a Map since we know that the ordering will be
+// consistent
+function countKDifference(nums, k) {
+    let counter = {};
+    let count = 0;
+
+    for (let num of nums) {
+        counter[num] = ++counter[num] || 1;
+    }
+
+    for (let key in counter) {
+        let neededNum = Number(key) + k;
+        if (counter[neededNum] !== undefined) {
+            count += counter[neededNum] * counter[key];
+        }
+    }
+    return count;
+}
+
+// Two Sum 2 - Input Array is Sorted
+// Using a two pointer approach, we start on both ends and work our way in
+function twoSum(numbers, target) {
+    let left = 0;
+    let right = numbers.length - 1;
+
+    while (left < right) {
+        let sum = numbers[left] + numbers[right];
+        if (sum === target) return [left + 1, right + 1];
+        else if (sum < target) left++;
+        else right--;
+    }
+}
+
+// Two Sum Less than K
+// Similar to Two Sum 2, we use two pointers to calculate the current sum
+// If the sum is less than K, we find the maxSum and we increment left
+// otherwise, we decrement right
+// At the end, if we were unable to find any numbers return -1
+
+function twoSumLessThanK(nums, k) {
+    let maxSum = -Infinity;
+
+    num.sort((a, b) => a - b);
+    let left = 0;
+    let right = nums.length - 1;
+
+    while (left < right) {
+        let sum = nums[left] + nums[right];
+
+        if (sum < k) {
+            maxSum = Math.max(maxSum, sum);
+            left++;
+        } else {
+            right--;
+        }
+    }
+
+    return maxSum === -Infinity ? -1 : maxSum;
+}

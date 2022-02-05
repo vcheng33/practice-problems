@@ -783,3 +783,36 @@ function twoSumLessThanK(nums, k) {
 
     return maxSum === -Infinity ? -1 : maxSum;
 }
+
+// Permutations
+var permute = function (nums) {
+    let result = [];
+    // Create a base case when the nums array has only one element
+    if (nums.length === 1) return [[...nums]] // [[1]]
+
+    // We never do anything with i but we want to shift nums array num.length number of times
+    // i.e. we want to remove the first element and then add it back to the end until we get 
+    // back to the very first element
+    for (let i = 0; i < nums.length; i++) {
+        // We remove the first element in the array
+        let numToAppend = nums.shift(); 
+        // We call permute with the shortened nums array and save the results in a variable
+        let permutations = permute(nums); // [[1],[2]]
+
+        // We loop through the resulting permutations array and add numToAppend back to the end of
+        // inner arrays [[1],[2]] => [[1,3], [2,3]]
+        for (let perm of permutations) {
+            perm.push(numToAppend); // [[1,3], [2,3]]
+        }
+
+        // We need to backtrack/reset nums by adding back the number we just shifted so that 
+        // nums.length remains the same
+        nums.push(numToAppend);
+
+        // We push all the permutations that we just created into the results array which becomes
+        // the permutations variable when we call the function
+        result.push(...permutations);
+    }
+
+    return result;
+};

@@ -816,3 +816,68 @@ var permute = function (nums) {
 
     return result;
 };
+
+// generate parentheses
+var generateParenthesis = function (n) {
+    let stack = [];
+    let result = [];
+
+    function backtrack(open, close) {
+        // base case
+        if (open === close && open === n) {
+            result.push(stack.join(""));
+        }
+
+        // if we still have open parentheses we can use
+        if (open < n) {
+            stack.push('('); // We add the open parentheses to the stack and call the backtrack function
+            backtrack(open + 1, close);
+            stack.pop(); // We 'backtrack' or 'reset' by removing the parentheses we just added
+        }
+
+        // to add a closing parentheses, we must check that close is less than open
+        if (close < open) {
+            stack.push(')');
+            backtrack(open, close + 1);
+            stack.pop();
+        }
+    }
+    backtrack(0, 0);
+    return result;
+};
+
+// Phone Letter Combinations
+const NUM_TO_LETTER = {
+    2: 'abc',
+    3: 'def',
+    4: 'ghi',
+    5: 'jkl',
+    6: 'mno',
+    7: 'pqrs',
+    8: 'tuv',
+    9: 'wxyz',
+};
+
+function letterCombinations(digits) {
+    let results = [];
+
+    function backtrack(i, currStr) {
+        // Base Case: when the currStr is the same length as the digits
+        if (currStr.length === digits.length) {
+            results.push(currStr);
+            return;
+        }
+
+        // Progression: We get the associated letters for the next digit 
+        // We loop through each letter and add it to the currStr while calling
+        // backtrack
+        let lettersToAdd = NUM_TO_LETTER[digits[i]];
+        for (let letter of lettersToAdd) {
+            backtrack(i + 1, currStr + letter);
+        }
+    }
+    // If statement is needed in case we get an empty string, the expected
+    // output is an empty array so we need to bypass calling backtrack
+    if (digits !== "") backtrack(0, "");
+    return results;
+}

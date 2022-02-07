@@ -57,3 +57,94 @@ function insert(intervals, newInterval) {
 
     return merged;
 }
+
+// Minimum Number of Meeting Rooms Needed
+
+function minMeetingRooms(intervals) {
+    let starts = [];
+    let ends = [];
+
+    for (let [start, end] of intervals) {
+        starts.push(start);
+        ends.push(end);
+    }
+
+    starts.sort((a, b) => a - b);
+    ends.sort((a, b) => a - b);
+
+    let startsPointer = 0;
+    let endsPointer = 0;
+    let currCount = 0;
+    let maxCount = 0;
+
+    while (startsPointer < starts.length) {
+        if (starts[startsPointer] < ends[endsPointer]) {
+            currCount++;
+            startsPointer++;
+        } else {
+            currCount--;
+            endsPointer++;
+        }
+        maxCount = Math.max(currCount, maxCount);
+    }
+
+    return maxCount;
+}
+
+// Sort Array by Parity 2
+var sortArrayByParityII = function(nums) {
+    let odds = [];
+    let evens = [];
+
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] % 2 === 0) evens.push(nums[i]);
+        else odds.push(nums[i]);
+    }
+
+    let result = [];
+    let idx = 0;
+
+    while (idx < odds.length && idx < evens.length) {
+        result.push(evens[idx], odds[idx]);
+        idx++;
+    }
+
+    return result;
+};
+
+// Looping through only once, we create a new array and fill it with the even
+// and odd numbers that we find
+function sortArrayByParityII (nums) {
+    let result = [];
+    let odds = 1;
+    let evens = 0;
+
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] % 2 === 0) {
+            result[evens] = nums[i];
+            evens += 2;
+        } else {
+            result[odds] = nums[i];
+            odds += 2;
+        }
+    }
+
+    return result;
+}
+
+// In Place Solution
+function sortArrayByParityII(nums) {
+    // We loop through the even indices in the nums array until we find a number that is odd
+    for (let i = 0; i < nums.length; i += 2) {
+        if (nums[i] % 2 !== 0) {
+            // We then loop through the odd indices until we find a number that is even
+            for (let j = 1; j < nums.length; j += 2) {
+                if (nums[j] % 2 === 0) {
+                    // We swap the odd number that is at an even index with the even number that is at an odd index
+                    [nums[i], nums[j]] = [nums[j], nums[i]];
+                }
+            }
+        }
+    }
+    return nums;
+}

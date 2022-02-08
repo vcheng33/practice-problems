@@ -148,3 +148,76 @@ function sortArrayByParityII(nums) {
     }
     return nums;
 }
+// Number of Connected Components in an Undirected Graph
+function countComponents(n, edges) {
+    let connections = {};
+    let count = 0;
+
+    // We create an adjacency list from the edges
+    for (let [node1, node2] of edges) {
+        connections[node1] ? connections[node1].push(node2) : connections[node1] = [node2];
+        connections[node2] ? connections[node2].push(node1) : connections[node2] = [node1];
+    }
+
+    // We create a visited set that will allow us to keep track of the nodes that we have already
+    // visited so that we do not visit them again
+    let visited = new Set();
+
+    /* We loop through each node from 0 to n and check if it has been visited already.
+       If it hasn't, then we'll add the node to the visited set, increment our count
+       and start out toVisitQueue with the current node in the queue. When we finish the
+       bfs, we will have visited all of the nodes that are connected. 
+
+       As we continue to loop through 0 to n, if there are any other nodes that are not 
+       in the visited set, that means they were not connected in any previous nodes that 
+       were visited so we can increment count++ and run bfs again.
+    */
+    for (let i = 0; i < n; i++) {
+        if (!visited.has(i)) {
+            count++;
+            let toVisitQueue = [i];
+            visited.add(i);
+
+            while (toVisitQueue.length) {
+                let curr = toVisitQueue.shift();
+                let neighbours = connections[curr];
+
+                if (neighbours) {
+                    for (let neighbour of connections[curr]) {
+                        if (!visited.has(neighbour)) {
+                            visited.add(neighbour);
+                            toVisitQueue.push(neighbour);
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+    return count;
+}
+
+// Find the Celebrity
+
+var solution = function (knows) {
+    /**
+     * @param {integer} n Total people
+     * @return {integer} The celebrity
+     */
+    return function (n) {
+        let potentialCelebrity = 0;
+
+        for (let i = 1; i < n; i++) {
+            if (knows(potentialCelebrity, i)) {
+                potentialCelebrity = i;
+            }
+        }
+
+        for (let i = 0; i < n; i++) {
+            if (i !== potentialCelebrity && knows(potentialCelebrity, i) || (!knows(i, potentialCelebrity))) return -1;
+        }
+
+        return potentialCelebrity;
+    };
+};

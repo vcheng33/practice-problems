@@ -221,3 +221,30 @@ var solution = function (knows) {
         return potentialCelebrity;
     };
 };
+
+// Subsets
+// Backtracking
+var subsets = function (nums) {
+    let results = [];
+    let currentSubset = [];
+
+    function dfs(i) {
+        // Base Case, if we have reached nums.length, we can copy the current subset 
+        // into the results array.
+        if (i >= nums.length) {
+            results.push([...currentSubset]);
+            return;
+        }
+        
+        // We add the current number into the current subset and call dfs on the next number
+        currentSubset.push(nums[i]);
+        dfs(i + 1);
+
+        // We backtrack and remove the number we just added 
+        currentSubset.pop();
+        dfs(i + 1);
+    }
+
+    dfs(0);
+    return results;
+};

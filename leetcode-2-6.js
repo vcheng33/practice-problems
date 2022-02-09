@@ -280,3 +280,40 @@ var subsetsWithDup = function (nums) {
     }
     return results;
 };
+
+// Search in Rotated Sorted Array 
+// O(log n) + O(1)
+
+function search(nums, target) {
+    let left = 0;
+    let right = nums.length - 1;
+
+    // We use a Binary Search to find the target
+    while (left <= right) {
+        let mid = Math.floor((left + right) / 2);
+        
+        if (nums[mid] === target) return mid;
+
+        // We are checking to see if the left side is the correctly sorted side
+        if (nums[left] <= nums[mid]) {
+            // if the target is within the range of the correctly sorted side, we
+            // can continue the search in this range, otherwise, we search the otherside
+            if (target >= nums[left] && target < nums[mid]) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        // If the right side is the correctly sorted side
+        } else {
+            // We check if the target is within the range of the correctly sorted right side
+            // If it is, then we continue our search on the right side. Otherwise, we search
+            // the other side.
+            if (target <= nums[right] && target > nums[mid]) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+    }
+    return -1;
+}

@@ -248,3 +248,35 @@ var subsets = function (nums) {
     dfs(0);
     return results;
 };
+
+// Subsets 2
+// Backtracking
+var subsetsWithDup = function (nums) {
+    // We sort the numbers so that we can be sure the nums and the quantities of each num is the same
+    // when we add it to the subsets map.
+    nums.sort((a, b) => a - b);
+    let results = [];
+    let subsets = new Map();
+    let currentSubset = [];
+
+    function dfs(i) {
+        if (i >= nums.length) {
+            let key = currentSubset.toString();
+            subsets.set(key, [...currentSubset]);
+            return;
+        }
+
+        currentSubset.push(nums[i]);
+        dfs(i + 1);
+
+        currentSubset.pop();
+        dfs(i + 1);
+    }
+
+    dfs(0);
+
+    for (let [key, value] of subsets) {
+        results.push(value);
+    }
+    return results;
+};

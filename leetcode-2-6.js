@@ -317,3 +317,16 @@ function search(nums, target) {
     }
     return -1;
 }
+
+// Crawler Log Folder
+var minOperations = function (logs) {
+    let fileStack = [];
+
+    for (let log of logs) {
+        if (log === "../") fileStack.pop();
+        else if (log === "./") continue;
+        else fileStack.push(log);
+    }
+
+    return fileStack.length;
+};
